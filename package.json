@@ -7,5 +7,14 @@
     "dev": "nodemon index.js"
   },
   "author": "Leeroyka",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "telegraf": "^4.15.3",
+    "telegraf-stateless-question": "^2.0.1"
+  }
 }
