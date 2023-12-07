@@ -1,5 +1,6 @@
 const TelegrafStatelessQuestion = require('telegraf-stateless-question');
 const { mafstatsFetch } = require('../services/mafstatsFetch');
+const { getPlayerGames } = require('../utils/getPlayerGames');
 
 const tournamentIdQuestion = new TelegrafStatelessQuestion('tournamentId', async (ctx) => {
   ctx.session.tournamentId = Number(ctx.message.text);
@@ -40,12 +41,9 @@ const playerIdQuestion = new TelegrafStatelessQuestion('playerId', async (ctx) =
     return ctx.scene.leave();
   }
 
-  ctx.reply('Готово!');
+  await ctx.reply('Готово!');
 
-  console.log(ctx.session.playerNickname);
-  console.log(ctx.session.tournamentData);
-
-  // await ctx.reply(ctx.session.playerId + ' ' + ctx.session.tournamentId);
+  console.log(getPlayerGames(ctx.session.tournamentData, ctx.session.playerNickname));
 });
 
 module.exports = {

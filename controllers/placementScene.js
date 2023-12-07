@@ -8,7 +8,6 @@ placementScene.enter(async (ctx) => {
   await tournamentIdQuestion.replyWithMarkdown(ctx, 'Введите ID турнира');
   return ctx.scene.leave();
 });
-
 // await ctx.reply('test', Markup.inlineKeyboard([Markup.button.callback('test', 'test2')]));
 
 module.exports = {
