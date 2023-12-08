@@ -1,6 +1,6 @@
 const table = require('@klny/text-table');
 
-const getGameTable = ({ tour, game }, playerNickname) => {
+const getGameTable = ({ tour, game }, playerNickname, tournamentTitle) => {
   const tableHeader = `${game.tableNumber}, ${game.referee}`;
   const tableArray = [];
 
@@ -14,7 +14,7 @@ const getGameTable = ({ tour, game }, playerNickname) => {
     i++;
   });
 
-  return table(` - - - ${tour} | ${tableHeader} - - - `, tableArray);
+  return table(` - - - ${tour} | ${tableHeader} | ${tournamentTitle} - - - `, tableArray);
 };
 
 module.exports = { getGameTable };
