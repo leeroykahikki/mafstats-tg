@@ -1,6 +1,7 @@
 const TelegrafStatelessQuestion = require('telegraf-stateless-question');
 const { mafstatsFetch } = require('../services/mafstatsFetch');
 const { getPlayerGames } = require('../utils/getPlayerGames');
+const { getGameTable } = require('../utils/getGameTable');
 
 const tournamentIdQuestion = new TelegrafStatelessQuestion('tournamentId', async (ctx) => {
   ctx.session.tournamentId = Number(ctx.message.text);
@@ -9,11 +10,12 @@ const tournamentIdQuestion = new TelegrafStatelessQuestion('tournamentId', async
     await ctx.replyWithPhoto({ url: process.env.MAFSTATS_SERVER_LINK + 'playerID.png' });
     await playerIdQuestion.replyWithMarkdown(ctx, 'Введите ID игрока');
   } else {
-    await ctx.reply('Некорректный ID турнира');
+    await ctx.reply('⛔️ Некорректный ID турнира');
     return ctx.scene.leave();
   }
 });
 
+// деструктуризировать метод на подметоды
 const playerIdQuestion = new TelegrafStatelessQuestion('playerId', async (ctx) => {
   ctx.session.playerId = ctx.message.text;
 
@@ -25,7 +27,7 @@ const playerIdQuestion = new TelegrafStatelessQuestion('playerId', async (ctx) =
     });
   } catch (error) {
     console.log(error.message);
-    await ctx.reply('Неправильный ID турнира или рассадка ещё не была сформирована');
+    await ctx.reply('⛔️ Неправильный ID турнира или рассадка ещё не была сформирована');
     return ctx.scene.leave();
   }
 
@@ -37,13 +39,26 @@ const playerIdQuestion = new TelegrafStatelessQuestion('playerId', async (ctx) =
     ctx.session.playerNickname = nickname;
   } catch (error) {
     console.log(error.message);
-    await ctx.reply('Некорректный ID пользователя');
+    await ctx.reply('⛔️ Некорректный ID пользователя');
     return ctx.scene.leave();
   }
 
-  await ctx.reply('Готово!');
+  // сделать чуть раньше вывод о турнире и игроке
+  const playerGames = getPlayerGames(
+    ctx.session.tournamentData.toursList,
+    ctx.session.playerNickname,
+  );
 
-  console.log(getPlayerGames(ctx.session.tournamentData, ctx.session.playerNickname));
+  if (playerGames === undefined || playerGames.length == 0) {
+    // сделать получение данных о названии турнира
+    await ctx.replyWithHTML(
+      `⛔️ Игр с участием <b>${ctx.session.playerNickname}</b> на турнире <b>«${ctx.session.tournamentData.tournamentInfo.title}»</b> не было найдено`,
+    );
+    return ctx.scene.leave();
+  } else {
+    ctx.session.playerGames = playerGames;
+    await ctx.replyWithHTML(getGameTable(ctx.session.playerGames[0], ctx.session.playerNickname));
+  }
 });
 
 module.exports = {

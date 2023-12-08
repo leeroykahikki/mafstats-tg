@@ -1,9 +1,7 @@
-const getPlayerGames = (tournamentData, nickname) => {
-  console.log(tournamentData);
-  console.log(nickname);
+const getPlayerGames = (toursList, nickname) => {
   const playerGames = [];
 
-  tournamentData.forEach(({ name, games }) => {
+  toursList.forEach(({ name, games }) => {
     games.forEach((game) => {
       let isPlayerExist = false;
 
@@ -15,7 +13,7 @@ const getPlayerGames = (tournamentData, nickname) => {
 
       if (isPlayerExist) {
         const playerGame = {
-          tour: name.split(' ')[1],
+          tour: name,
           game: game,
         };
 
