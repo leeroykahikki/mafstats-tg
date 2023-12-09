@@ -8,7 +8,7 @@ const getGameTable = ({ tour, game }, playerNickname, tournamentTitle) => {
   game.playersInfo.forEach(({ nickname }) => {
     const player = {
       '№': i != 10 ? `  ${i}  ` : ` ${i} `,
-      Игрок: playerNickname == nickname ? `<code>${nickname}</code>` : `${nickname}`,
+      Игрок: playerNickname == nickname ? `<u>${nickname}</u>` : `${nickname}`,
     };
     tableArray.push(player);
     i++;

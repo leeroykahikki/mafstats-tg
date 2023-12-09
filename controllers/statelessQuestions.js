@@ -1,8 +1,7 @@
-const { Markup } = require('telegraf');
 const TelegrafStatelessQuestion = require('telegraf-stateless-question');
 const { mafstatsFetch } = require('../services/mafstatsFetch');
 const { getPlayerGames } = require('../utils/getPlayerGames');
-const { getGameTable } = require('../utils/getGameTable');
+const { getPlacementMenu } = require('../utils/getPlacementMenu');
 
 const tournamentIdQuestion = new TelegrafStatelessQuestion('tournamentId', async (ctx) => {
   ctx.session.tournamentId = Number(ctx.message.text);
@@ -56,8 +55,7 @@ const playerIdQuestion = new TelegrafStatelessQuestion('playerId', async (ctx) =
     return;
   } else {
     ctx.session.playerGames = playerGames;
-    console.log(playerGames);
-    const { menu } = getPlacementMenu(ctx.session.playerGames);
+    const menu = getPlacementMenu(ctx.session.playerGames);
     await ctx.reply(
       `📝 Следующие данные были найдены:\n🧑‍🦽 Игрок: ${ctx.session.playerNickname}\n🏆 Турнир: ${ctx.session.tournamentData.tournamentInfo.title}`,
       menu,
@@ -65,41 +63,6 @@ const playerIdQuestion = new TelegrafStatelessQuestion('playerId', async (ctx) =
     return;
   }
 });
-
-const getPlacementMenu = (playerGames) => {
-  const tourButtons = [];
-  const tourButtonActions = [];
-
-  let i = 0;
-  let j = 0;
-  let tourButtonsTemp = [];
-  playerGames.forEach(({ tour }) => {
-    j++;
-    const buttonAction = {
-      title: tour,
-      action: (ctx) => {
-        ctx.replyWithHTML(getGameTable(ctx.session.playerGames[i], ctx.session.playerNickname));
-      },
-    };
-
-    if (j != 5) {
-      tourButtonsTemp.push(Markup.button.callback(tour, tour));
-    } else {
-      tourButtonsTemp.push(Markup.button.callback(tour, tour));
-      tourButtons.push(tourButtonsTemp);
-      tourButtonsTemp = [];
-      j = 0;
-    }
-    tourButtonActions.push(buttonAction);
-
-    i++;
-  });
-
-  return {
-    menu: Markup.inlineKeyboard([...tourButtons]).resize(),
-    actions: tourButtonActions,
-  };
-};
 
 module.exports = {
   tournamentIdQuestion,
