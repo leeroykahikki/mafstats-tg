@@ -1,7 +1,7 @@
 const { Scenes, session, Telegraf } = require('telegraf');
 const { placementScene } = require('./controllers/placementScene');
 const { tournamentIdQuestion, playerIdQuestion } = require('./controllers/statelessQuestions');
-const { commandStart, commandTest } = require('./controllers/commands');
+const { commandStart, commandStats } = require('./controllers/commands');
 const { getGameTable } = require('./utils/getGameTable');
 
 const bot = new Telegraf(process.env.TELEGRAM_API_TOKEN);
@@ -18,7 +18,7 @@ const setupBot = () => {
 
   // Команды бота
   bot.command('placement', (ctx) => ctx.scene.enter('placementScene'));
-  bot.command('test', commandTest);
+  bot.command('stats', commandStats);
 
   for (let i = 0; i < 30; i++) {
     bot.action(`Тур ${i + 1}`, (ctx) => {
