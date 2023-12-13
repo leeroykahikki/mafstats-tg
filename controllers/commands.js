@@ -8,7 +8,9 @@ const commandStart = (ctx) =>
 const commandStats = (ctx) =>
   ctx.reply(
     'Нажми на кнопку 👇',
-    Markup.inlineKeyboard([Markup.button.webApp('Статистика', WEB_APP_URL)]),
+    Markup.inlineKeyboard([
+      Markup.button.webApp('Статистика', 'https://mafstats-mini-app.vercel.app/'),
+    ]),
   );
 
 module.exports = {
